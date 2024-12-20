@@ -1,0 +1,49 @@
+\chapter{Umsetzung}\label{ch:umsetzung}
+\section{Backend}\label{sec:umsetzung_backend}
+Bei der recherche zum Thema \gls{llm} habe ich oft Artikel, Anleitungen und Repositories gefunden die für ihre Implementierung Python verwenden.
+Da ich schon Erfahrung mit Python habe und die Bibliotheken die ich verwenden wollte auch in Python verfügbar sind, habe ich mich früh für Python entschieden.\\
+Da der Chatbot ein getrennter Microservice von der Haupt Applikation sein sollte, habe ich basierend auf meiner vorherigen Erfahrung mit HTTP APIs in meinem Studium für FastAPI entschieden.\\
+FastAPI ist ein modernes Webframework für Python das auf Starlette und Pydantic basiert. 
+Dieses Framework habe ich bereits für ein Projekt in meinem Studium verwendet und war sehr zufrieden damit.
+Zudem habe ich bei der Wahl der Technologien und Frameworks die ich verwendet habe freie Wahl bekommen und wollte
+mich daher für etwas entscheiden dass ich schon kenne und von dem ich überzeugt bin dass es für das Projekt geeignet ist.
+Python hat zwar aus meiner Erfahrung die Problematik relativ langsam im Vergleich zu anderen Sprachen zu sein aber der Großteil der Antwortzeit wird durch die \gls{llm} verursacht 
+für die ich einen externen Service von Azure verwende. Python war daher für mich die beste Wahl.\\\\
+Für das abspeichern der Konversationen zwischen Nutzer und Chatbot habe ich\\MongoDB verwendet. Hauptsächlich weil ich schon Erfahrung mit MongoDB habe und es einfach zu verwenden ist.
+MongoDB hat außerdem den Vorteil dass es sehr flexibel ist und ich die Datenbankstruktur während der Entwicklung inpassen kann.
+Jede andere gängige Datenbank hätte aber auch genauso gut Funktioniert wie z.B. PostgreSQL oder MySQL.\\
+
+\section{LLM, RAG, SentenceTransformer}\label{sec:umsetzung_intro}
+Da ich vorher noch nie mit \gls{llm}s gearbeitet habe, habe ich mich zuerst in die Thematik eingearbeitet 
+und mir Artikel durchgelesen wie ich mit mit Hilfe von Produktdaten passende Antworten generieren kann.\\\\
+Ein Begriff der dabei immer wieder auftaucht ist \gls{rag}.\\\\
+Bei \gls{rag} handelt es sich um eine Methode bei der ein Chatbot mit Hilfe von Nutzer Eingaben passende 
+Informationen aus einer Datenbank abruft und mit diesen zusammen eine Antwort generiert.\\
+Ein zentrales Problem dabei auf das ich schnell gestoßen bin ist das finden der relevantesten Daten in einer Datenbank.
+Beim testen und ausprobieren habe ich festgestellt das die Qualität der Antworten stark von der Qualität der Daten abhängt.
+Wenn ich es nicht schaffe die relevantesten Daten zu finden, kann der Chatbot keine passende Antwort generieren.\\
+Ein großes Problem ist aber dass aufgrund von Kosten und der Verarbeitungsdauer nicht die gesamte Datenbank an die \gls{llm} übergeben werden kann.
+Eine suche in der Datenbank gestaltet sich aber schwierig da der Nutzer nicht immer die gleichen Wörter benutzt wie in den Produktdaten stehen und
+die Nutzereingabe nicht immer Grammatikalisch korrekt ist.\\\\
+Um dieses Problem zu lösen findet man im Internet immer wieder die Begriffe Sentence Embedding und Vektordatenbanken.
+Der Wikipedia Artikel dazu erklärt Sentence Embedding wie folgt:\\
+\cite{wiki:SentEmb}
+\begin{quote}
+    \textit{In natural language processing, a sentence embedding refers to a numeric representation of a sentence in the form of a vector of real numbers which encodes meaningful semantic information.}
+\end{quote}\\
+
+Durch diese verwendung von Vektoren kann man Daten in eine Vektroräpresentation umwandeln dessen Information nicht aus dem Inhalt besteht sondern aus
+der Beziehung zu einem Kontext und anderen Vektoren.\\
+Als Beispiel lassen sich Vektoren zu Produkten über: HDMI, VGA, DVD und USB in der nähe von einem Vektor Multimedia finden.
+Durch die Semantische Verknüpfung von Daten lassen sich auch Produkte finden die nicht explizit mit den Suchbegriffen beschrieben sind aber inhaltlich
+relevant sind.\\
+Ein Nutzer der beispielsweise Fragen zu Steckdosen in seinem Unterflursystem hat, könnte auch Informationen zu Überspannungsschutz oder Kabelmanagement brauchen.\\
+Für das erzeugen der Vektoren habe ich mich für das Model \lstinline|text-embedding-3-small| der Firma OpenAI entschieden.\cite{openai:Embeddings}.
+Dieses Model kategorisiert Texte in 1536 Dimensionen und hat mir ausreichend Semantische Informationen geliefert um die Datenbank zu durchsuchen.
+Außerdem waren die Vektoren klein genug um sie schnell in einer Datenbank zu speichern und zu verarbeiten.\\
+Ich hatte auch versucht diverse Embedding Models von Huggingface zu verwenden, jedoch waren die Ergebnisse nicht zufriedenstellend oder die Modelle zu groß für meine Hardware.\\
+
+\section{Datenbank}\label{sec:umsetzung_db}
+Um die Vektoren und die Produktdaten zu speichern habe ich mich für die Vektor-Datenbank \href{https://milvus.io/}{Milvus} entschieden.
+Milvus ist eine Open Source Vektor-Datenbank die speziell für die Verarbeitung von Vektoren entwickelt wurde.
+Sie läuft leicht lokal und bietet ein gutes Package für Python an.\\

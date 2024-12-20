@@ -3,7 +3,9 @@
 
 % Enable the arial font
 \RequirePackage{fontspec}
-\setmainfont{Arial} % If an error tells you, that this font can't be found, please install it on your computer.
+\setmainfont{Roboto} % If an error tells you, that this font can't be found, please install it on your computer.
+
+\RequirePackage{listings}
 
 % Allow lists in tables
 \RequirePackage{array}
@@ -49,8 +51,8 @@
 
 % Literaturverzeichnis nach ISO 690 (Nachfolger von DIN 1505)
 % Further help at https://github.com/michal-h21/biblatex-iso690
-\RequirePackage[style=iso-authoryear]{biblatex}
-\addbibresource{datenbanken/Literaturverzeichnis.bib}
+\RequirePackage[style=numeric, backend=biber]{biblatex}
+\addbibresource{./datenbanken/Literaturverzeichnis.bib}
 \KOMAoptions{bibliography=totocnumbered}
 
 % Abbildungsvereichnis im Inhaltsvereichnis auflisten
