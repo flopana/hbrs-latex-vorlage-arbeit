@@ -6,6 +6,11 @@
 \setmainfont{Roboto} % If an error tells you, that this font can't be found, please install it on your computer.
 
 \RequirePackage{listings}
+\newcommand{\captionwithsource}[2]{
+    \caption{#1}
+    \vspace{-0.5\baselineskip}
+    \caption*{Quelle: {#2}}
+}
 
 % Allow lists in tables
 \RequirePackage{array}

@@ -1,0 +1,108 @@
+\chapter{Umsetzung}\label{ch:umsetzung}
+\section{Backend}\label{sec:umsetzung_backend}
+\subsection{API}\label{sec:umsetzung_api}
+Bei der recherche zum Thema \gls{llm} habe ich oft Artikel, Anleitungen und Repositories gefunden die für ihre Implementierung Python verwenden.
+Da ich schon Erfahrung mit Python habe und die Bibliotheken die ich verwenden wollte auch in Python verfügbar sind, habe ich mich früh für Python entschieden.\\
+Da der Chatbot ein getrennter Microservice von der Haupt Applikation sein sollte, habe ich basierend auf meiner vorherigen Erfahrung mit HTTP APIs in meinem Studium für FastAPI entschieden.\\
+FastAPI ist ein modernes Webframework für Python das auf Starlette und Pydantic basiert. 
+Dieses Framework habe ich bereits für ein Projekt in meinem Studium verwendet und war sehr zufrieden damit.
+Zudem habe ich bei der Wahl der Technologien und Frameworks die ich verwendet habe freie Wahl bekommen und wollte
+mich daher für etwas entscheiden dass ich schon kenne und von dem ich überzeugt bin dass es für das Projekt geeignet ist.
+Python hat zwar aus meiner Erfahrung die Problematik relativ langsam im Vergleich zu anderen Sprachen zu sein aber der Großteil der Antwortzeit wird durch die \gls{llm} verursacht 
+für die ich einen externen Service von Azure verwende. Python war daher für mich die beste Wahl.\\\\
+Für das abspeichern der Konversationen zwischen Nutzer und Chatbot habe ich\\MongoDB verwendet. Hauptsächlich weil ich schon Erfahrung mit MongoDB habe und es einfach zu verwenden ist.
+MongoDB hat außerdem den Vorteil dass es sehr flexibel ist und ich die Datenbankstruktur während der Entwicklung inpassen kann.\\
+Jede andere gängige Datenbank hätte aber auch genauso gut Funktioniert wie z.B. PostgreSQL oder MySQL.\\
+
+\subsection{LLM, RAG, SentenceTransformer}\label{sec:umsetzung_intro}
+Da ich vorher noch nie mit \gls{llm}s gearbeitet habe, habe ich mich zuerst in die Thematik eingearbeitet 
+und mir Artikel durchgelesen wie ich mit mit Hilfe von Produktdaten passende Antworten generieren kann.\\\\
+Ein Begriff der dabei immer wieder auftaucht ist \gls{rag}.\\\\
+Bei \gls{rag} handelt es sich um eine Methode bei der ein Chatbot mit Hilfe von Nutzer Eingaben passende 
+Informationen aus einer Datenbank abruft und mit diesen zusammen eine Antwort generiert.\\
+Ein zentrales Problem dabei auf das ich schnell gestoßen bin ist das finden der relevantesten Daten in einer Datenbank.
+Beim testen und ausprobieren habe ich festgestellt das die Qualität der Antworten stark von der Qualität der Daten abhängt.
+Wenn ich es nicht schaffe die relevantesten Daten zu finden, kann der Chatbot keine passende Antwort generieren.\\
+Ein großes Problem ist aber dass aufgrund von Kosten und der Verarbeitungsdauer nicht die gesamte Datenbank an die \gls{llm} übergeben werden kann.
+Eine suche in der Datenbank gestaltet sich aber schwierig da der Nutzer nicht immer die gleichen Wörter benutzt wie in den Produktdaten stehen und
+die Nutzereingabe nicht immer Grammatikalisch korrekt ist.
+
+\pagebreak
+Um dieses Problem zu lösen findet man im Internet immer wieder die Begriffe Sentence Embedding und Vektordatenbanken.
+Der Wikipedia Artikel dazu erklärt Sentence Embedding wie folgt:\\
+\cite{wiki:SentEmb}
+\begin{quote}
+    \textit{In natural language processing, a sentence embedding refers to a numeric representation of a sentence in the form of a vector of real numbers which encodes meaningful semantic information.}
+\end{quote}\\
+
+Durch diese verwendung von Vektoren kann man Daten in eine Vektroräpresentation umwandeln dessen Information nicht aus dem Inhalt besteht sondern aus
+der Beziehung zu einem Kontext und anderen Vektoren.\\
+Als Beispiel lassen sich Vektoren zu Produkten über: HDMI, VGA, DVD und USB in der nähe von einem Vektor Multimedia finden.
+Durch die Semantische Verknüpfung von Daten lassen sich auch Produkte finden die nicht explizit mit den Suchbegriffen beschrieben sind aber inhaltlich
+relevant sind.\\
+Ein Nutzer der beispielsweise Fragen zu Steckdosen in seinem Unterflursystem hat, könnte auch Informationen zu Überspannungsschutz oder Kabelmanagement brauchen.\\
+Für das erzeugen der Vektoren habe ich mich für das Model \lstinline|text-embedding-3-small| der Firma OpenAI entschieden \cite{openai:Embeddings}.
+Dieses Model kategorisiert Texte in 1536 Dimensionen und hat mir ausreichend Semantische Informationen geliefert um die Datenbank zu durchsuchen.
+Außerdem waren die Vektoren klein genug um sie schnell in einer Datenbank zu speichern und zu verarbeiten.\\
+Ich hatte auch versucht diverse Embedding Models von Huggingface zu verwenden, jedoch waren die Ergebnisse nicht zufriedenstellend oder die Modelle zu groß für meine Hardware.\\
+
+\subsection{Datenbank}\label{sec:umsetzung_db}
+Um die Vektoren und die Produktdaten zu speichern habe ich mich für die Vektor-Datenbank Milvus \cite{milvus} entschieden.
+Milvus ist eine Open Source Vektor-Datenbank die speziell für die Verarbeitung von Vektoren entwickelt wurde.
+Sie läuft leicht lokal und bietet ein gutes Package für Python an.\\
+Anfangs habe ich die die Daten direkt als \gls{json} vektorisiert und in Milvus gespeichert. Dabei habe ich schnell festgestellt dass sich das Embedding Model
+zu sehr auf die \gls{json} Struktur bezogen hat und die Vektoren sehr ähnlich waren obwohl sie semantisch völlig unterschiedliche Informationen enthalten haben.\\
+Daher habe ich die Daten etwas aufbereiten müssen und habe aus jedem Produkt den Titel und die Beschreibung extrahiert und diese als Text zusammengefügt.
+Dadurch habe ich einen "natürlicheren" Text bekommen der besser zu den Daten gepasst hat auf denen das Model trainiert wurde.\\
+Das war einer der größten Herausforderungen bei der Entwicklung des Chatbots da viele Artikel nicht auf \gls{json} Daten aufbauen sondern auf natürlichen Texten wie sie
+in Foren oder Dokumentationen vorkommen.\\
+In meiner Firma haben wir genau so einen Anwendungsfall wo das \gls{bdgb}, unsere interne Dokumentation,vektorisiert worden ist und in Teams über einen Chatbot zur verfügung steht.\\
+Um die Vektor-Datenbank zu befüllen habe ich mit \href{https://apscheduler.readthedocs.io/en/3.x/}{APScheduler} einen Scheduler geschrieben der über Admin Endpunkte in der API gesteuert werden kann.
+Diese werden zukünftig in den Adminbereich und in die \gls{cicd} Pipeline der Hauptaplikation des Kunden integriert.
+
+\pagebreak
+Die Anfrage des Nutzers wird ebenfalls vektorisiert und damit in Milvus gesucht. Hier suche ich mit Milvus nach den Top 10 Vektoren die am nächsten an dem Vektor der Nutzereingabe liegen.
+So erhalte ich die 10 relevantesten Produkte die ich dann an die \gls{llm} übergebe. Die Antwort der \gls{llm}, die Anfrage des Nutzers und die 10 relevantesten Produkte werden in einem Messages Array
+gespeichert und in MongoDB abgelegt.\\
+Das Komplette Dokument steht der \gls{llm} zur Verfügung und wird von ihr verwendet um die Antwort zu generieren.\\
+
+\section{Frontend}\label{sec:umsetzung_frontend}
+\subsection{Konfigurator des Kunden}\label{sec:umsetzung_konfigurator}
+Der Kunde hat bereits einen Konfigurator für seine Unterflursysteme. Dieser Konfigurator ist in Angular geschrieben und wird in der Hauptapplikation des Kunden verwendet.
+Wichtig und leider nicht leicht war es für mich mich in die Angular Applikation einzuarbeiten und die benötigten Daten für den Chatbot zu extrahieren.\\
+Vorher habe ich zwar bereits mit Reaktiven Frameworks wie React und Vue gearbeitet aber Angular war mir neu. Besonders die generelle Struktur und Funktionsweise von Angular war für mich neu.
+In React und Vue war ich gewöhnt dass Komponenten in ihrer eigenen Datei stehen und daher oft sehr Schmal sind. Außerdem gibt es besonder bei React nicht viele
+Hauseigene Funktionen. Außer ein paar Hooks und Contexts ist React sehr minimalistisch und besteht hauptsächlich aus Funktionen die \gls{jsx} zurückgeben.\\
+Angular hingegen hat viele eigene Funktionen und ist sehr stark auf Klassen und Vererbung aufgebaut Angular unterscheidet klar zwischen Komponenten, Services und Modulen.
+Das hat am Anfang etwas gedauert bis ich mich daran gewöhnt und verstanden habe wie der Datenfluss in Angular funktioniert.\\
+Dazu kam noch dass ich mich in die Struktur der Hauptapplikation einarbeiten musste. Die Hauptapplikation des Kunden ist sehr groß und hat viele Funktionen, Komponenten und zahlreiche
+Services die alle miteinander kommunizieren. Die Konfiguratoren sind wie \gls{dea} aufgebaut und können sehr komplex sein. Das hat es mir erschwert die benötigten Daten zu extrahieren
+da die Architektur für die Anwendung des Kunden zwar für ihr Ziel sehr gut ist aber für den Chatbot nicht optimal.\\\\
+Das Hauptproblem war dass die Daten die ich für den Chatbot brauchte nicht in einer Datei oder einem Service standen sondern über mehrere Services und Komponenten verteilt waren.
+Dazu kommt dass das Zentrale aggregieren der Daten erst in dem Schritt $n+1$ stattgefunden hat.
+Das bedeutet die aktuelle Konfiguration des Schrittes in dem der Nutzer sich befindet wird erst im nächsten Schritt aggregiert und in einem Service gespeichert.
+Für den Chatbot war es aber wichtig dass ich die Daten schon in dem Schritt in dem der Nutzer sich befindet abrufen kann.\\
+Das hat dazu geführt dass die Implementation des Chatbots eindeutig umfangreicher und komplexer war als ich es mir vorgestellt habe.
+
+\pagebreak
+\subsection{Chatbot}\label{sec:umsetzung_chatbot}
+Der Chatbot selber ist eine Standalone Component die in der Hauptapplikation des Kunden eingebunden wird. Dazu gibt es einen \lstinline|chatService| 
+der die Kommunikation zwischen dem Backend und dem Frontend steuert und die aktuelle Konversation speichert.\\
+Dieser Service kümmert sich außerdem um mögliche Fehlermeldungen und behandelt diese, in dem beispielsweise die Konversation neu gestartet wird wenn sie
+bereits gelöscht worden ist oder den \lstinline|alertService| verwendet um den Nutzer über einen Fehler zu informieren.\\
+Wichtig war auch das Design und die Nutzerfreundlichkeit des Chatbots. Der Chatbot sollte möglichst intuitiv sein und dem Nutzer helfen seine Fragen zu beantworten.
+Dafür habe ich mich mit einer UX-Designerin meiner Firma zusammen gesetzt und das Design des Chatbots besprochen.
+Für mich war es das erste mal dass ich mit einem UX-Designer zusammengearbeitet habe und konnte dadurch viel lernen.
+Teils sind das kleine Sachen die die Nutzerfreundlichkeit verbessern wie z.B. ein Lade Animation wenn der Chatbot eine Anfrage an das Backend schickt oder welches Icon man für den Button benutzt
+der eine neue Konversation startet.\\
+Ursprünglich war dieses Icon ein Plus, wir haben aber festgestellt dass ein Plus eher für das hinzufügen von etwas steht und nicht für das starten einer neuen Konversation.
+Das Plus suggerierte dem Nutzer er könne mehrere Konversationen gleichzeitig führen was nicht der Fall ist. Das Backend meines Chatbots würde das zwar erlauben aber
+es war nie vorgesehen dass das Frontend das unterstützt. Daher haben wir uns für ein Refresh Icon entschieden das den Nutzer klar macht dass er eine neue Konversation startet.\\
+
+Hier zur veranschaulichung das Icon das wir verwendet haben: \cite{fontawesome:refresh}\\
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=3cm]{bilder/arrows-rotate-solid.png}
+        \caption{arrows-rotate}\label{fig:refresh_fontawesome}
+    \end{center}
+\end{figure}
