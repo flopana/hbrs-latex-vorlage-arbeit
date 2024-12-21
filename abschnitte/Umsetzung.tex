@@ -11,7 +11,7 @@ mich daher für etwas entscheiden dass ich schon kenne und von dem ich überzeug
 Python hat zwar aus meiner Erfahrung die Problematik relativ langsam im Vergleich zu anderen Sprachen zu sein aber der Großteil der Antwortzeit wird durch die \gls{llm} verursacht 
 für die ich einen externen Service von Azure verwende. Python war daher für mich die beste Wahl.\\\\
 Für das abspeichern der Konversationen zwischen Nutzer und Chatbot habe ich\\MongoDB verwendet. Hauptsächlich weil ich schon Erfahrung mit MongoDB habe und es einfach zu verwenden ist.
-MongoDB hat außerdem den Vorteil dass es sehr flexibel ist und ich die Datenbankstruktur während der Entwicklung inpassen kann.\\
+MongoDB hat außerdem den Vorteil dass es sehr flexibel ist und ich die Datenbankstruktur während der Entwicklung anpassen kann.\\
 Jede andere gängige Datenbank hätte aber auch genauso gut Funktioniert wie z.B. PostgreSQL oder MySQL.\\
 
 \subsection{LLM, RAG, SentenceTransformer}\label{sec:umsetzung_intro}
@@ -53,19 +53,24 @@ Sie läuft leicht lokal und bietet ein gutes Package für Python an.\\
 Anfangs habe ich die die Daten direkt als \gls{json} vektorisiert und in Milvus gespeichert. Dabei habe ich schnell festgestellt dass sich das Embedding Model
 zu sehr auf die \gls{json} Struktur bezogen hat und die Vektoren sehr ähnlich waren obwohl sie semantisch völlig unterschiedliche Informationen enthalten haben.\\
 Daher habe ich die Daten etwas aufbereiten müssen und habe aus jedem Produkt den Titel und die Beschreibung extrahiert und diese als Text zusammengefügt.
-Dadurch habe ich einen "natürlicheren" Text bekommen der besser zu den Daten gepasst hat auf denen das Model trainiert wurde.\\
+Dadurch habe ich einen \enquote{natürlicheren} Text bekommen der besser zu den Daten gepasst hat auf denen das Model trainiert wurde.\\
 Das war einer der größten Herausforderungen bei der Entwicklung des Chatbots da viele Artikel nicht auf \gls{json} Daten aufbauen sondern auf natürlichen Texten wie sie
 in Foren oder Dokumentationen vorkommen.\\
 In meiner Firma haben wir genau so einen Anwendungsfall wo das \gls{bdgb}, unsere interne Dokumentation,vektorisiert worden ist und in Teams über einen Chatbot zur verfügung steht.\\
 Um die Vektor-Datenbank zu befüllen habe ich mit \href{https://apscheduler.readthedocs.io/en/3.x/}{APScheduler} einen Scheduler geschrieben der über Admin Endpunkte in der API gesteuert werden kann.
-Diese werden zukünftig in den Adminbereich und in die \gls{cicd} Pipeline der Hauptaplikation des Kunden integriert.
-
-\pagebreak
+Diese werden zukünftig in den Adminbereich und in die \gls{cicd} Pipeline der Hauptaplikation des Kunden integriert.\\
 Die Anfrage des Nutzers wird ebenfalls vektorisiert und damit in Milvus gesucht. Hier suche ich mit Milvus nach den Top 10 Vektoren die am nächsten an dem Vektor der Nutzereingabe liegen.
 So erhalte ich die 10 relevantesten Produkte die ich dann an die \gls{llm} übergebe. Die Antwort der \gls{llm}, die Anfrage des Nutzers und die 10 relevantesten Produkte werden in einem Messages Array
 gespeichert und in MongoDB abgelegt.\\
 Das Komplette Dokument steht der \gls{llm} zur Verfügung und wird von ihr verwendet um die Antwort zu generieren.\\
+Zusätzlich habe ich die Nutzereingabe \enquote{Stopword} bereinigt, das sind Wörter die in der deutschen Sprache oft vorkommen und keine semantische Bedeutung haben und für die
+Suche irrelevant sind. Dazu gehören im deutschen beispielsweise Artikel, Präpositionen und Konjunktionen wie \enquote{der}, \enquote{die}, \enquote{das}, \enquote{und}, \enquote{oder} und \enquote{in}.
+Das bereinigen von Stopwords hat die Qualität der Suchergebnisse etwas verbessert und war dazu sehr einfach zu implementieren da ich einfach aus den Stopwords und der
+Eingabe jeweils eine Menge erstellt und die Schnittmenge abgezogen habe.\\
+Diese bereinigte Eingabe habe ich dann an das Embedding Model übergeben und mit dem Vektor in Milvus gesucht.
+Die \gls{llm} hat trotzdem die Vollständige Eingabe des Nutzers erhalten.
 
+\pagebreak
 \section{Frontend}\label{sec:umsetzung_frontend}
 \subsection{Konfigurator des Kunden}\label{sec:umsetzung_konfigurator}
 Der Kunde hat bereits einen Konfigurator für seine Unterflursysteme. Dieser Konfigurator ist in Angular geschrieben und wird in der Hauptapplikation des Kunden verwendet.
