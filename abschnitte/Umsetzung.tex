@@ -81,8 +81,8 @@ Hauseigene Funktionen. Außer ein paar Hooks und Contexts ist React sehr minimal
 Angular hingegen hat viele eigene Funktionen und ist sehr stark auf Klassen und Vererbung aufgebaut Angular unterscheidet klar zwischen Komponenten, Services und Modulen.
 Das hat am Anfang etwas gedauert bis ich mich daran gewöhnt und verstanden habe wie der Datenfluss in Angular funktioniert.\\
 Dazu kam noch dass ich mich in die Struktur der Hauptapplikation einarbeiten musste. Die Hauptapplikation des Kunden ist sehr groß und hat viele Funktionen, Komponenten und zahlreiche
-Services die alle miteinander kommunizieren. Die Konfiguratoren sind wie \gls{dea} aufgebaut und können sehr komplex sein. Das hat es mir erschwert die benötigten Daten zu extrahieren
-da die Architektur für die Anwendung des Kunden zwar für ihr Ziel sehr gut ist aber für den Chatbot nicht optimal.\\\\
+Services die alle miteinander kommunizieren. Die Konfiguratoren sind wie \gls{dea} aufgebaut und können sehr komplex sein. Das hat es mir erschwert die benötigten Daten zu extrahieren,
+da die Architektur für die Anwendung des Kunden zwar für ihr Ziel sehr gut ist, aber für den Chatbot nicht optimal.\\\\
 Das Hauptproblem war dass die Daten die ich für den Chatbot brauchte nicht in einer Datei oder einem Service standen sondern über mehrere Services und Komponenten verteilt waren.
 Dazu kommt dass das Zentrale aggregieren der Daten erst in dem Schritt $n+1$ stattgefunden hat.
 Das bedeutet die aktuelle Konfiguration des Schrittes in dem der Nutzer sich befindet wird erst im nächsten Schritt aggregiert und in einem Service gespeichert.
