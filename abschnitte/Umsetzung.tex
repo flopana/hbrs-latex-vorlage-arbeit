@@ -73,38 +73,39 @@ Die \gls{llm} hat dennoch die vollständige Eingabe des Nutzers erhalten.
 \pagebreak
 \section{Frontend}\label{sec:umsetzung_frontend}
 \subsection{Konfigurator des Kunden}\label{sec:umsetzung_konfigurator}
-Der Kunde hat bereits einen Konfigurator für seine Unterflursysteme. Dieser Konfigurator ist in Angular geschrieben und wird in der Hauptapplikation des Kunden verwendet.
-Wichtig und leider nicht leicht war es für mich mich in die Angular Applikation einzuarbeiten und die benötigten Daten für den Chatbot zu extrahieren.\\
-Vorher habe ich zwar bereits mit Reaktiven Frameworks wie React und Vue gearbeitet aber Angular war mir neu. Besonders die generelle Struktur und Funktionsweise von Angular war für mich neu.
-In React und Vue war ich gewöhnt dass Komponenten in ihrer eigenen Datei stehen und daher oft sehr Schmal sind. Außerdem gibt es besonder bei React nicht viele
-hauseigene Funktionen. Außer ein paar Hooks und Contexts ist React sehr minimalistisch und besteht hauptsächlich aus Funktionen die \gls{jsx} zurückgeben.\\
-Angular hingegen hat viele eigene Funktionen und ist sehr stark auf Klassen und Vererbung aufgebaut Angular unterscheidet klar zwischen Komponenten, Services und Modulen.
-Das hat am Anfang etwas gedauert bis ich mich daran gewöhnt und verstanden habe wie der Datenfluss in Angular funktioniert.\\
-Dazu kam noch dass ich mich in die Struktur der Hauptapplikation einarbeiten musste. Die Hauptapplikation des Kunden ist sehr groß und hat viele Funktionen, Komponenten und zahlreiche
-Services die alle miteinander kommunizieren. Die Konfiguratoren sind wie \gls{dea} aufgebaut und können sehr komplex sein. Das hat es mir erschwert die benötigten Daten zu extrahieren,
-da die Architektur für die Anwendung des Kunden zwar für ihr Ziel sehr gut ist, aber für den Chatbot nicht optimal.\\\\
-Das Hauptproblem war dass die Daten die ich für den Chatbot brauchte nicht in einer Datei oder einem Service standen sondern über mehrere Services und Komponenten verteilt waren.
-Dazu kommt dass das Zentrale aggregieren der Daten erst in dem Schritt $n+1$ stattgefunden hat.
-Das bedeutet die aktuelle Konfiguration des Schrittes in dem der Nutzer sich befindet wird erst im nächsten Schritt aggregiert und in einem Service gespeichert.
-Für den Chatbot war es aber wichtig dass ich die Daten schon in dem Schritt in dem der Nutzer sich befindet abrufen kann.\\
-Das hat dazu geführt dass die Implementation des Chatbots eindeutig umfangreicher und komplexer war als ich es mir vorgestellt habe.
+Der Kunde hat bereits einen Konfigurator für seine Unterflursysteme. Dieser Konfigurator ist in Angular geschrieben und wird in der Hauptapplikation des Kunden verwendet.  
+Wichtig und leider nicht leicht war es für mich, mich in die Angular-Applikation einzuarbeiten und die benötigten Daten für den Chatbot zu extrahieren.\\  
+Vorher hatte ich zwar bereits mit reaktiven Frameworks wie React und Vue gearbeitet, aber Angular war mir neu. Besonders die generelle Struktur und Funktionsweise von Angular war für mich ungewohnt.  
+In React und Vue war ich es gewohnt, dass Komponenten in ihrer eigenen Datei stehen und daher oft sehr kompakt sind. Außerdem gibt es besonders bei React nicht viele  
+hauseigene Funktionen. Außer ein paar Hooks und Contexts ist React sehr minimalistisch und besteht hauptsächlich aus Funktionen, die \gls{jsx} zurückgeben.\\  
+Angular hingegen bietet viele eigene Funktionen und ist stark auf Klassen und Vererbung aufgebaut. Angular unterscheidet klar zwischen Komponenten, Services und Modulen.  
+Es hat einige Zeit gedauert, bis ich mich daran gewöhnt und verstanden habe, wie der Datenfluss in Angular funktioniert.\\  
+Zusätzlich musste ich mich in die Struktur der Hauptapplikation einarbeiten. Die Hauptapplikation des Kunden ist sehr groß und hat viele Funktionen, Komponenten und zahlreiche  
+Services, die alle miteinander kommunizieren. Die Konfiguratoren sind wie \gls{dea} aufgebaut und können sehr komplex sein. Das hat es mir erschwert, die benötigten Daten zu extrahieren,  
+da die Architektur der Anwendung des Kunden zwar für ihr Ziel sehr gut ist, aber für den Chatbot nicht optimal.\\\\  
+Das Hauptproblem war, dass die Daten, die ich für den Chatbot brauchte, nicht in einer Datei oder einem Service standen, sondern über mehrere Services und Komponenten verteilt waren.  
+Hinzu kam, dass das zentrale Aggregieren der Daten erst in dem Schritt $n+1$ stattgefunden hat.  
+Das bedeutet, die aktuelle Konfiguration des Schrittes, in dem der Nutzer sich befindet, wird erst im nächsten Schritt aggregiert und in einem Service gespeichert.  
+Für den Chatbot war es jedoch wichtig, dass ich die Daten bereits in dem Schritt abrufen kann, in dem sich der Nutzer gerade befindet.\\  
+Das führte dazu, dass die Implementierung des Chatbots deutlich umfangreicher und komplexer war, als ich es mir ursprünglich vorgestellt hatte.
 
 \pagebreak
 \subsection{Chatbot}\label{sec:umsetzung_chatbot}
-Der Chatbot selber ist eine Standalone Component die in der Hauptapplikation des Kunden eingebunden wird. Dazu gibt es einen \lstinline|chatService| 
-der die Kommunikation zwischen dem Backend und dem Frontend steuert und die aktuelle Konversation speichert.\\
-Dieser Service kümmert sich außerdem um mögliche Fehlermeldungen und behandelt diese, in dem beispielsweise die Konversation neu gestartet wird wenn sie
-bereits gelöscht worden ist oder den \lstinline|alertService| verwendet um den Nutzer über einen Fehler zu informieren.\\
-Wichtig war auch das Design und die Nutzerfreundlichkeit des Chatbots. Der Chatbot sollte möglichst intuitiv sein und dem Nutzer helfen seine Fragen zu beantworten.
-Dafür habe ich mich mit einer UX-Designerin meiner Firma zusammen gesetzt und das Design des Chatbots besprochen.
-Für mich war es das erste mal dass ich mit einem UX-Designer zusammengearbeitet habe und konnte dadurch viel lernen.
-Teils sind das kleine Sachen die die Nutzerfreundlichkeit verbessern wie z.B. ein Lade Animation wenn der Chatbot eine Anfrage an das Backend schickt oder welches Icon man für den Button benutzt
-der eine neue Konversation startet.\\
-Ursprünglich war dieses Icon ein Plus, wir haben aber festgestellt dass ein Plus eher für das hinzufügen von etwas steht und nicht für das starten einer neuen Konversation.
-Das Plus suggerierte dem Nutzer er könne mehrere Konversationen gleichzeitig führen was nicht der Fall ist. Das Backend meines Chatbots würde das zwar erlauben aber
-es war nie vorgesehen dass das Frontend das unterstützt. Daher haben wir uns für ein Refresh Icon entschieden das den Nutzer klar macht dass er eine neue Konversation startet.\\
+Der Chatbot selbst ist eine Standalone-Komponente, die in der Hauptapplikation des Kunden eingebunden wird. Dazu gibt es einen \lstinline|chatService|,  
+der die Kommunikation zwischen dem Backend und dem Frontend steuert und die aktuelle Konversation speichert.\\  
+Dieser Service kümmert sich außerdem um mögliche Fehlermeldungen und behandelt diese, indem beispielsweise die Konversation neu gestartet wird, wenn sie  
+bereits gelöscht worden ist, oder den \lstinline|alertService| verwendet, um den Nutzer über einen Fehler zu informieren.\\  
+Wichtig waren auch das Design und die Nutzerfreundlichkeit des Chatbots. Der Chatbot sollte möglichst intuitiv sein und dem Nutzer helfen, seine Fragen zu beantworten.  
+Dafür habe ich mich mit einer UX-Designerin meiner Firma zusammengesetzt und das Design des Chatbots besprochen.  
+Für mich war es das erste Mal, dass ich mit einem UX-Designer zusammengearbeitet habe, und ich konnte dadurch viel lernen.\\  
+Teils waren es kleine Details, die die Nutzerfreundlichkeit verbessern, wie z.\,B. eine Ladeanimation, wenn der Chatbot eine Anfrage an das Backend schickt,  
+oder die Auswahl des Icons für den Button, der eine neue Konversation startet.\\  
+Ursprünglich war dieses Icon ein Plus-Symbol, aber wir haben festgestellt, dass ein Plus eher für das Hinzufügen von etwas steht und nicht für das Starten einer neuen Konversation.  
+Das Plus suggerierte dem Nutzer, er könne mehrere Konversationen gleichzeitig führen, was nicht der Fall ist.  
+Das Backend meines Chatbots würde das zwar erlauben, aber es war nie vorgesehen, dass das Frontend dies unterstützt.  
+Daher haben wir uns für ein Refresh-Icon entschieden, das dem Nutzer klar macht, dass er eine neue Konversation startet.\\  
 
-Hier zur veranschaulichung das Icon das wir verwendet haben: \cite{fontawesome:refresh}\\
+Hier zur Veranschaulichung das Icon, das wir verwendet haben: \cite{fontawesome:refresh}\\  
 \begin{figure}[H]
     \begin{center}
         \includegraphics[width=3cm]{bilder/arrows-rotate-solid.png}
