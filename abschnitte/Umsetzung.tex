@@ -1,18 +1,18 @@
 \chapter{Umsetzung}\label{ch:umsetzung}
 \section{Backend}\label{sec:umsetzung_backend}
 \subsection{API}\label{sec:umsetzung_api}
-Bei der recherche zum Thema \gls{llm} habe ich oft Artikel, Anleitungen und Repositories gefunden die für ihre Implementierung Python verwenden.
-Da ich schon Erfahrung mit Python habe und die Bibliotheken die ich verwenden wollte auch in Python verfügbar sind, habe ich mich früh für Python entschieden.\\
-Da der Chatbot ein getrennter Microservice von der Haupt Applikation sein sollte, habe ich basierend auf meiner vorherigen Erfahrung mit HTTP APIs in meinem Studium für FastAPI entschieden.\\
-FastAPI ist ein modernes Webframework für Python das auf Starlette und Pydantic basiert. 
-Dieses Framework habe ich bereits für ein Projekt in meinem Studium verwendet und war sehr zufrieden damit.
-Zudem habe ich bei der Wahl der Technologien und Frameworks die ich verwendet habe freie Wahl bekommen und wollte
-mich daher für etwas entscheiden dass ich schon kenne und von dem ich überzeugt bin dass es für das Projekt geeignet ist.
-Python hat zwar aus meiner Erfahrung die Problematik relativ langsam im Vergleich zu anderen Sprachen zu sein aber der Großteil der Antwortzeit wird durch die \gls{llm} verursacht 
-für die ich einen externen Service von Azure verwende. Python war daher für mich die beste Wahl.\\\\
-Für das speichern der Konversationen zwischen Nutzer und Chatbot habe ich MongoDB verwendet. Hauptsächlich weil ich schon Erfahrung mit MongoDB habe und es einfach zu verwenden ist.
-MongoDB hat außerdem den Vorteil dass es sehr flexibel ist und ich die Datenbankstruktur während der Entwicklung anpassen kann.\\
-Jede andere gängige Datenbank hätte aber auch genauso gut Funktioniert wie z.B. PostgreSQL oder MySQL.\\
+Bei der Recherche zum Thema \gls{llm} habe ich oft Artikel, Anleitungen und Repositories gefunden, die für ihre Implementierung Python verwenden.  
+Da ich bereits Erfahrung mit Python habe und die Bibliotheken, die ich verwenden wollte, ebenfalls in Python verfügbar sind, habe ich mich früh für Python entschieden.\\  
+Da der Chatbot ein getrennter Microservice von der Hauptapplikation sein sollte, habe ich mich basierend auf meiner vorherigen Erfahrung mit HTTP-APIs im Studium für FastAPI entschieden.\\  
+FastAPI ist ein modernes Webframework für Python, das auf Starlette und Pydantic basiert.  
+Dieses Framework habe ich bereits für ein Projekt in meinem Studium verwendet und war sehr zufrieden damit.  
+Zudem hatte ich bei der Wahl der Technologien und Frameworks, die ich verwendet habe, freie Hand und wollte  
+mich daher für etwas entscheiden, das ich bereits kenne und von dem ich überzeugt bin, dass es für das Projekt geeignet ist.  
+Python hat zwar aus meiner Erfahrung die Problematik, relativ langsam im Vergleich zu anderen Sprachen zu sein, aber der Großteil der Antwortzeit wird durch die \gls{llm} verursacht,  
+für die ich einen externen Service von Azure verwende. Python war daher für mich die beste Wahl.\\\\  
+Für das Speichern der Konversationen zwischen Nutzer und Chatbot habe ich MongoDB verwendet hauptsächlich, weil ich bereits Erfahrung mit MongoDB habe und es einfach zu verwenden ist.  
+MongoDB hat außerdem den Vorteil, dass es sehr flexibel ist und ich die Datenbankstruktur während der Entwicklung anpassen kann.\\  
+Jede andere gängige Datenbank hätte aber ebenfalls gut funktioniert, wie z.\B. PostgreSQL oder MySQL.\\
 
 \subsection{LLM, RAG, SentenceTransformer}\label{sec:umsetzung_intro}
 Da ich vorher noch nie mit \gls{llm}s gearbeitet habe, habe ich mich zuerst in die Thematik eingearbeitet 
