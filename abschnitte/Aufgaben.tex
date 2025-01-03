@@ -24,12 +24,12 @@ Implementierung, die Funktionsweise und die Nutzung des Chatbots beschreibt.
 \section{Projektinformationen}\label{sec:proj_info}
 \subsection{Unterflursysteme}\label{sec:unterflursysteme}
 
-Unterflursysteme sind eine spezielle Art von Bodentanks, die in Bürogebäuden, Konferenzräumen und anderen öffentlichen Gebäuden eingesetzt werden.
-In diesen Systemen können verschiedene Module wie Steckdosen, Netzwerkanschlüsse, USB-Ports und Multimedia-Anschlüsse integriert werden.\\
-Die Bodetanks werden bündig im Boden verlegt und sind mit einer Abdeckung versehen, die bei Bedarf geöffnet werden kann, um Zugang zu den darin enthaltenen Modulen zu erhalten.\\\\
-Der Kunde für den der Chatbot entwickelt werden soll, bietet eine Vielzahl von Unterflursystemen an, die individuell konfiguriert werden können.
-Diese Konfiguration umfasst die Auswahl der Art des Tanks (Beton oder Estrich), der Module, die Anzahl der Anschlüsse und die Positionierung der einzelnen Elemente im Bodentank.\\
-Dabei kann die Konfiguration je nach Anforderungen durchaus komplex sein wobei der Chatbot helfen soll.
+Unterflursysteme sind eine spezielle Art von Bodentanks, die in Bürogebäuden, Konferenzräumen und anderen öffentlichen Gebäuden eingesetzt werden.  
+In diesen Systemen können verschiedene Module wie Steckdosen, Netzwerkanschlüsse, USB-Ports und Multimedia-Anschlüsse integriert werden.\\  
+Die Bodentanks werden bündig im Boden verlegt und sind mit einer Abdeckung versehen, die bei Bedarf geöffnet werden kann, um Zugang zu den darin enthaltenen Modulen zu erhalten.\\\\  
+Der Kunde, für den der Chatbot entwickelt werden soll, bietet eine Vielzahl von Unterflursystemen an, die individuell konfiguriert werden können.  
+Diese Konfiguration umfasst die Auswahl der Art des Tanks (Beton oder Estrich), der Module, die Anzahl der Anschlüsse und die Positionierung der einzelnen Elemente im Bodentank.\\  
+Dabei kann die Konfiguration je nach Anforderungen durchaus komplex sein, wobei der Chatbot helfen soll.
 
 \begin{figure}[H]
     \begin{center}
@@ -40,23 +40,23 @@ Dabei kann die Konfiguration je nach Anforderungen durchaus komplex sein wobei d
 
 \pagebreak
 \subsection{Projekttyp}\label{sec:proj_typ}
-Der Chatbot soll mit den Methodiken von \gls{rag} entwickelt werden.\\
-\gls{rag} ist ein Ansatz zur Entwicklung von Chatbots, der mit hilfe der Nutzer Eingabe
+Der Chatbot soll mit den Methodiken von \gls{rag} entwickelt werden.\\  
+\gls{rag} ist ein Ansatz zur Entwicklung von Chatbots, der mit Hilfe der Nutzereingabe  
 passende Informationen aus einer Datenbank abruft und mit diesen zusammen eine Antwort generiert.
 
 \subsection{Projektziele}\label{sec:proj_ziele}
-Das Ziel des Projektes ist es einen Kosteneffizienten und nützlichen Chatbot zu entwickeln der Nutzer
-bei der Konfiguration von Unterflur Systemen helfen kann.\\
-Sollte dies erfolgreich sein und der Kunde überzeugt soll der Chatbot
-möglichst einfach auf weitere Konfiguratoren des Kunden erweiterbar sein.\\\\
-Sehr wichtig war mir dabei nicht einfach einen weiteren simplen wrapper für gängige \gls{llm} zu programmieren.
-Diese sind aus meiner Erfahrung, und der meiner Arbeitskollegen, oft nicht hilfreich und negativ behaftet insbesondere wenn diese
-anstatt eines kompetenten Support Teams eingesetzt werden.
+Das Ziel des Projektes ist es, einen kosteneffizienten und nützlichen Chatbot zu entwickeln, der Nutzer  
+bei der Konfiguration von Unterflursystemen unterstützen kann.\\  
+Sollte dies erfolgreich sein und der Kunde überzeugt werden, soll der Chatbot  
+möglichst einfach auf weitere Konfiguratoren des Kunden erweiterbar sein.\\\\  
+Sehr wichtig war mir dabei, nicht einfach einen weiteren simplen Wrapper für gängige \gls{llm} zu programmieren.  
+Diese sind aus meiner Erfahrung und der meiner Arbeitskollegen oft nicht hilfreich und negativ behaftet, insbesondere wenn diese  
+anstatt eines kompetenten Support-Teams eingesetzt werden.
 
 Daher waren mir folgende Punkte besonders wichtig:
 \begin{itemize}
-    \item Kosteneffizient.\\Der Kontext der Produktdaten soll nur die nötigsten Informationen enthalten.
-    \item Einfache Erweiterbarkeit.\\Der Chatbot soll möglichst einfach auf weitere Konfiguratoren des Kunden erweiterbar sein.
-    \item Nutzerfreundlichkeit.\\Das Design und die Interaktionen sollen möglichst intuitiv sein. Zusammenarbeit mit dem UX-Team.
-    \item Kein ersatz für den Support.\\Der Chatbot soll den Support nicht ersetzen sondern ergänzen.
+    \item \textbf{Kosteneffizient.}\\Der Kontext der Produktdaten soll nur die nötigsten Informationen enthalten.
+    \item \textbf{Einfache Erweiterbarkeit.}\\Der Chatbot soll möglichst einfach auf weitere Konfiguratoren des Kunden erweiterbar sein.
+    \item \textbf{Nutzerfreundlichkeit.}\\Das Design und die Interaktionen sollen möglichst intuitiv sein. Zusammenarbeit mit dem UX-Team.
+    \item \textbf{Kein Ersatz für den Support.}\\Der Chatbot soll den Support nicht ersetzen, sondern ergänzen.
 \end{itemize}
